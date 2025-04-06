@@ -18,15 +18,15 @@ class Queue:
         Args:
             x (_type_): _description_
         """
-        if self.head:
+        if self.head is None:
+            self.head = Node(x)
+        else:
             temp = self.head
             while temp:
                 if temp.next is None:
                     temp.next = Node(x)
                 else:
                     temp = temp.next
-        else:
-            self.head = Node(x)
 
     def pop(self):
         """a method to pop the first element from the queue
@@ -41,7 +41,7 @@ class Queue:
             raise ValueError
         temp = self.head
         self.head = self.head.next
-        return temp
+        return temp.data
 
     def is_empty(self):
         """a method to check if the queue is empty
@@ -61,7 +61,7 @@ class Queue:
             _type_: _description_
         """
         if self.head:
-            return self.head
+            return self.head.data
         raise ValueError
 
 
@@ -78,34 +78,40 @@ class MyStack:
         Args:
             x (_type_): _description_
         """
-        if self.inner.is_empty():
-            self.inner.add(Node(x))
-        else:
-            while not self.inner.is_empty():
-                self.outer.add(self.inner.pop())
-        self.outer.add(Node(x))
-        while not self.outer.is_empty():
-            self.inner.add(self.outer.pop())
+        self.inner.add(x)
+        # if self.inner.is_empty():
+        #     self.inner.add(x)
+        # else:
+        #     while not self.inner.is_empty():
+        #         self.outer.add(self.inner.pop())
+        #     self.outer.add(x)
+        #     while not self.outer.is_empty():
+        #         self.inner.add(self.outer.pop())
 
     def pop(self):
         """Removes the element on the top of the stack and returns it.
         """
+        counter = 0
         if self.inner.is_empty():
             raise ValueError
         else:
             while not self.inner.is_empty():
+                counter += 1
                 self.outer.add(self.inner.pop())
-        to_ret = self.outer.pop()
-        while not self.outer.is_empty():
-            self.inner.add(self.outer.pop())
-        return to_ret.dat
+            for i in range(1, counter):
+                self.inner.add(self.outer.pop())
+                return self.outer.pop()
+        # to_ret = self.outer.pop()
+        # while not self.outer.is_empty():
+        #     self.inner.add(self.outer.pop())
+        # return to_ret
 
     def top(self):
         """Returns the element on the top of the stack.
         """
         if self.inner is None:
             raise ValueError
-        return self.inner.head
+        return self.inner.head.data
 
     def empty(self):
         """Returns true if the stack is empty, false otherwise.
