@@ -22,11 +22,9 @@ class Queue:
             self.head = Node(x)
         else:
             temp = self.head
-            while temp:
-                if temp.next is None:
-                    temp.next = Node(x)
-                else:
-                    temp = temp.next
+            while temp.next:
+                temp = temp.next
+            temp.next = Node(x)
 
     def pop(self):
         """a method to pop the first element from the queue
@@ -79,14 +77,6 @@ class MyStack:
             x (_type_): _description_
         """
         self.inner.add(x)
-        # if self.inner.is_empty():
-        #     self.inner.add(x)
-        # else:
-        #     while not self.inner.is_empty():
-        #         self.outer.add(self.inner.pop())
-        #     self.outer.add(x)
-        #     while not self.outer.is_empty():
-        #         self.inner.add(self.outer.pop())
 
     def pop(self):
         """Removes the element on the top of the stack and returns it.
@@ -100,18 +90,22 @@ class MyStack:
                 self.outer.add(self.inner.pop())
             for i in range(1, counter):
                 self.inner.add(self.outer.pop())
-                return self.outer.pop()
-        # to_ret = self.outer.pop()
-        # while not self.outer.is_empty():
-        #     self.inner.add(self.outer.pop())
-        # return to_ret
+        return self.outer.pop()
 
     def top(self):
         """Returns the element on the top of the stack.
         """
-        if self.inner is None:
+        counter = 0
+        if self.inner.is_empty():
             raise ValueError
-        return self.inner.head.data
+        while not self.inner.is_empty():
+            counter += 1
+            self.outer.add(self.inner.pop())
+        for i in range(counter-1):
+            self.inner.add(self.outer.pop())
+        toreturn = self.outer.pop()
+        self.inner.add(toreturn)
+        return toreturn
 
     def empty(self):
         """Returns true if the stack is empty, false otherwise.
